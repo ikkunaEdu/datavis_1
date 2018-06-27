@@ -37,7 +37,7 @@
             [1, 2,  3, 4, 5, 6],
             [1, 2,  3, 4, 5, 6],
             [1, 2,  3, 4, 5, 6],
-            [1, 2,  3, 4, 5, 6],
+            [1, 2,  3, 2, 5, 6],
             [1, 2,  3, 4, 5, 6],
             [1, 2,  3, 4, 5, 6]
             ];
@@ -69,7 +69,7 @@
                     .style('stroke', 'black')
                     .style('stroke-width', '1px')
                     .style('stroke-opacity', .1)
-                    .style('fill', d => { someColors(d); })
+                    .style('fill', d => { return someColors(d); })
                     .style('fill-opacity', function(d) { return d * 0.8/maxVal });
             })
         </script>
