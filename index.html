@@ -32,49 +32,60 @@
         <svg height:"640" width="640"><</svg>
         <script src="https://d3js.org/d3.v4.min.js"></script>
         <script type="text/javascript">
+            var mymatrix = [];
             d3.csv("https://ikkunaedu.github.io/datavis_1/data/ejemplo.csv", function(rows) {
                 console.log(rows);
-            });
-            var element = document.getElementsByTagName('svg');
-            var matrix = [
-            [1, 2,  3, 4, 5, 6],
-            [1, 2,  3, 4, 5, 6],
-            [1, 2,  3, 4, 5, 6],
-            [1, 2,  3, 4, 5, 6],
-            [1, 2,  3, 4, 5, 6],
-            [1, 2,  3, 4, 5, 6]
-            ];
-            var maxVal = matrix.map( x => x.reduce( (a,x) => (a > x) ? a : x, 0 ) ).reduce( (a,x) => (a > x) ? a : x, 0 );
-            //console.log('max value:',maxVal);
+                rows.columns.map( function(x,i) { mymatrix.push(rows.columns.map( function(y,j) { return parseFloat(rows[i][y]) } ) )  } )
+                console.log("mymatrix",mymatrix)
+                var element = document.getElementsByTagName('svg');
+                // var matrix = [
+                // [1, 2,  3, 4, 5, 6],
+                // [1, 2,  3, 4, 5, 6],
+                // [1, 2,  3, 4, 5, 6],
+                // [1, 2,  3, 4, 5, 6],
+                // [1, 2,  3, 4, 5, 6],
+                // [1, 2,  3, 4, 5, 6]
+                // ];
+                var matrix = [
+                [1, 2,  3],
+                [1, 2,  3],
+                [1, 2,  3]
+                ];
+                matrix = mymatrix;
+                console.log("matrix",matrix)
+                var maxVal = matrix.map( x => x.reduce( (a,x) => (a > x) ? a : x, 0 ) ).reduce( (a,x) => (a > x) ? a : x, 0 );
+                //console.log('max value:',maxVal);
 
-            var someColors = d3.scaleOrdinal()
-                .range(d3.schemeCategory20b);
-            var len = 50;
+                var someColors = d3.scaleOrdinal()
+                    .range(d3.schemeCategory20b);
+                var len = 50;
 
-            var svg = d3.select(element[0]);
-            svg
-                .attr('width', len*matrix.length)
-                .attr('height', len*matrix.length)
-                .attr('transform', 'translate(0,0)')
-                .selectAll('rect')
-                .data(matrix)
-                .enter()
-                .append('g')
-                .each( function(d,i) {d3.select(this)
+                var svg = d3.select(element[0]);
+                svg
+                    .attr('width', len*matrix.length)
+                    .attr('height', len*matrix.length)
+                    .attr('transform', 'translate(0,0)')
                     .selectAll('rect')
-                    .data(d)
+                    .data(matrix)
                     .enter()
-                    .append('rect')
-                    .attr('width', function(d,j) { return len })
-                    .attr('height', function(d) { return len })
-                    .attr('x', function(d,j) { return j*len })
-                    .attr('y', function(d) { return i*len })
-                    .style('stroke', 'black')
-                    .style('stroke-width', '1px')
-                    .style('stroke-opacity', .1)
-                    .style('fill', d => { someColors(d); })
-                    .style('fill-opacity', function(d) { return d * 0.8/maxVal });
-            })
+                    .append('g')
+                    .each( function(d,i) {d3.select(this)
+                        .selectAll('rect')
+                        .data(d)
+                        .enter()
+                        .append('rect')
+                        .attr('width', function(d,j) { return len })
+                        .attr('height', function(d) { return len })
+                        .attr('x', function(d,j) { return j*len })
+                        .attr('y', function(d) { return i*len })
+                        .style('stroke', 'black')
+                        .style('stroke-width', '1px')
+                        .style('stroke-opacity', .1)
+                        .style('fill', d => { someColors(d); })
+                        .style('fill-opacity', function(d) { return d * 0.8/maxVal });
+                })
+            });
+
         </script>
     </body>
 </html>
