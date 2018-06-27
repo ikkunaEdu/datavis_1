@@ -33,7 +33,7 @@
         <script src="https://d3js.org/d3.v4.min.js"></script>
         <script type="text/javascript">
             var mymatrix = [];
-            d3.csv("https://ikkunaedu.github.io/datavis_1/data/ejemplo.csv", function(rows) {
+            d3.csv("https://ikkunaedu.github.io/datavis_1/data/ejemplo2.csv", function(rows) {
                 console.log(rows);
                 rows.columns.map( function(x,i) { mymatrix.push(rows.columns.map( function(y,j) { return parseFloat(rows[i][y]) } ) )  } )
                 console.log("mymatrix",mymatrix)
@@ -47,17 +47,19 @@
                 // [1, 2,  3, 4, 5, 6]
                 // ];
                 var matrix = [
-                [1, 2,  3],
-                [1, 2,  3],
+                [1, 20,  3],
+                [1, 2,  5],
                 [1, 2,  3]
                 ];
-                matrix = mymatrix;
+                // matrix = mymatrix;
                 console.log("matrix",matrix)
                 var maxVal = matrix.map( x => x.reduce( (a,x) => (a > x) ? a : x, 0 ) ).reduce( (a,x) => (a > x) ? a : x, 0 );
                 //console.log('max value:',maxVal);
+                // console.log(d3.schemeCategory20b)
 
                 var someColors = d3.scaleOrdinal()
                     .range(d3.schemeCategory20b);
+                // console.log(someColors(2))
                 var len = 50;
 
                 var svg = d3.select(element[0]);
@@ -81,7 +83,7 @@
                         .style('stroke', 'black')
                         .style('stroke-width', '1px')
                         .style('stroke-opacity', .1)
-                        .style('fill', d => { someColors(d); })
+                        .style('fill', d => { return someColors(d); })
                         .style('fill-opacity', function(d) { return d * 0.8/maxVal });
                 })
             });
