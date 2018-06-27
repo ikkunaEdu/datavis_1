@@ -23,6 +23,8 @@ var arc = d3.arc()
     .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
     .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
 
+    console.log(element)
+
 var svg = d3.select(element[0])
     .attr("width", width)
     .attr("height", height)
@@ -31,7 +33,7 @@ var svg = d3.select(element[0])
 
 d3.json("https://ikkunaedu.github.io/datavis_1/data/flare.json", function(error, root) {
   if (error) throw error;
-
+    console.log("root", root)
   root = d3.hierarchy(root);
   root.sum(function(d) { return d.size; });
   svg.selectAll("path")
