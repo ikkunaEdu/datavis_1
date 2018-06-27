@@ -32,6 +32,9 @@
         <svg height:"640" width="640"><</svg>
         <script src="https://d3js.org/d3.v4.min.js"></script>
         <script type="text/javascript">
+            d3.csv("https://ikkunaedu.github.io/datavis_1/data/ejemplo.csv", function(rows) {
+                console.log(rows);
+            });
             var element = document.getElementsByTagName('svg');
             var matrix = [
             [1, 2,  3, 4, 5, 6],
