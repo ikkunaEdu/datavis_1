@@ -1,7 +1,6 @@
 <html>
     <head>
             <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-            <link type="text/css" rel="stylesheet" href="style.css"/>
             <style>
                 circle,
                 path {
@@ -27,7 +26,16 @@
     <body>
         <script src="http://d3js.org/d3.v3.min.js"></script>
         <script>
-        
+        var myjson = { 
+            "name": "main",
+            "children": []
+        };
+        d3.csv("https://ikkunaedu.github.io/datavis_1/data/madurez2.csv", function(rows) {
+            // console.log("rows",rows);
+            myjson.children = rows.map( function(x,i) { return Object.values(x).reduce( function(acc,y,j) { return j < 1 ? { "name" : y, "children": [{"name":"letssee", "size":10 }] } : acc }, {} ) } ) 
+            // console.log(   myjson   )
+            console.log(JSON.stringify(myjson))
+        })
         var margin = {top: 350, right: 480, bottom: 350, left: 480},
             radius = Math.min(margin.top, margin.right, margin.bottom, margin.left) - 10;
         
@@ -101,7 +109,8 @@
         }
         
         var root_ = null;
-        d3.json("https://ikkunaedu.github.io/datavis_1/data/newfile.json", function(error, root) {
+
+        var mycallback = function(error, root) {
             if (error) return console.warn(error);
             // Compute the initial layout on the entire tree to sum sizes.
             // Also compute the full name and fill color for each node,
@@ -241,7 +250,11 @@
                     
                     
             }
-        });
+        }
+
+        // mycallback("", myjson);
+
+        d3.json("https://ikkunaedu.github.io/datavis_1/data/newfile.json", function(error,root) { console.log("root",root); mycallback(error,root) });
         
         function key(d) {
             var k = [], p = d;
