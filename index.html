@@ -1,9 +1,7 @@
 <html>
     <head>
             <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-            <link type="text/css" rel="stylesheet" href="style.css"/>
             <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
-            <script type="text/javascript" src="js/d3.layout.js"></script>
             <style type="text/css">
         
         .chart {
@@ -33,7 +31,7 @@
     <body>
         <div id="body">
                 <div id="footer">
-                    d3.layout.partition
+                    d3.partition
                     <div class="hint">click para ascender o descender en la partición</div>
                 </div>
                 </div>
@@ -53,13 +51,28 @@
                 ]
             };
 
-            d3.csv("https://ikkunaedu.github.io/datavis_1/data/ejemplo.csv", function(rows) {
+            d3.csv("https://ikkunaedu.github.io/datavis_1/data/madurez.csv", function(rows) {
                 console.log("rows",rows);
-                rows.columns.map( function(x,i) { mymatrix.push(rows.columns.map( function(y,j) { return parseFloat(rows[i][y]) } ) )  } )
+                // rows.columns.map( function(x,i) { mymatrix.push(rows.columns.map( function(y,j) { return parseFloat(rows[i][y]) } ) )  } )
             })
 
 
+// Copies a variable number of methods from source to target.
+d3.rebind = function(target, source) {
+  var i = 1, n = arguments.length, method;
+  while (++i < n) target[method = arguments[i]] = d3_rebind(target, source, source[method]);
+  return target;
+};
 
+// Method is assumed to be a standard D3 getter-setter:
+// If passed with no arguments, gets the value.
+// If passed with arguments, sets the value and returns the target.
+function d3_rebind(target, source, method) {
+  return function() {
+    var value = method.apply(source, arguments);
+    return value === source ? target : value;
+  };
+}
 
             
             var w = 1120,
@@ -74,8 +87,19 @@
             .append("svg:svg")
                 .attr("width", w)
                 .attr("height", h);
+
+    var hierarchy = d3.hierarchy(data, getChildren)
+        .sum( function(d) { 
+            return d.size;
+        })
+        .sort(null);
+
+    var partition = d3.partition()
+                 .size([height, width])
+                 .padding(0)
+                 //.round(f);
             
-            var partition = d3.layout.partition()
+            var partition = d3.partition()
                 .value(function(d) { return d.size; });
 
         function parseJson(root) {
@@ -130,7 +154,7 @@
             }
         }
             
-            d3.json("https://ikkunaedu.github.io/datavis_1/data/flare.json", function (root) { console.log(x) }
+            d3.json("https://ikkunaedu.github.io/datavis_1/data/flare.json", function(root) { parseJson(root) } 
             );
             
         </script>
