@@ -38,6 +38,29 @@
                 </div>
                 </div>
         <script type="text/javascript">
+
+            var myjson = { 
+                "name": "encuesta",
+                "children": [
+                    { 
+                        "name" : "primera",
+                        "children": [
+                            {"name": "launch",
+                            "size": 40.4}
+                            
+                        ]
+                    }
+                ]
+            };
+
+            d3.csv("https://ikkunaedu.github.io/datavis_1/data/ejemplo.csv", function(rows) {
+                console.log("rows",rows);
+                rows.columns.map( function(x,i) { mymatrix.push(rows.columns.map( function(y,j) { return parseFloat(rows[i][y]) } ) )  } )
+            })
+
+
+
+
             
             var w = 1120,
                 h = 600,
@@ -54,8 +77,8 @@
             
             var partition = d3.layout.partition()
                 .value(function(d) { return d.size; });
-            
-            d3.json("https://ikkunaedu.github.io/datavis_1/data/flare.json", function(root) {
+
+        function parseJson(root) {
             var g = vis.selectAll("g")
                 .data(partition.nodes(root))
                 .enter().append("svg:g")
@@ -105,7 +128,10 @@
             function transform(d) {
                 return "translate(8," + d.dx * ky / 2 + ")";
             }
-            });
+        }
+            
+            d3.json("https://ikkunaedu.github.io/datavis_1/data/flare.json", function (root) { console.log(x) }
+            );
             
         </script>
     </body>
