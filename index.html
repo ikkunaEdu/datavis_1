@@ -2,7 +2,7 @@
     <head>
             <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
             <link type="text/css" rel="stylesheet" href="style.css"/>
-            <script type="text/javascript" src="js/d3.js"></script>
+            <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
             <script type="text/javascript" src="js/d3.layout.js"></script>
             <style type="text/css">
         
@@ -64,8 +64,8 @@
             
             var w = 1120,
                 h = 600,
-                x = d3.scale.linear().range([0, w]),
-                y = d3.scale.linear().range([0, h]);
+                x = d3.scaleLinear().range([0, w]),
+                y = d3.scaleLinear().range([0, h]);
             
             var vis = d3.select("#body").append("div")
                 .attr("class", "chart")
