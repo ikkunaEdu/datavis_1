@@ -28,14 +28,33 @@
         <script>
         var myjson = { 
             "name": "main",
-            "children": []
+            "children": [ { "name":"hello", "size":10 }, { "name":"bye", "size": 5 }  ]
         };
-        d3.csv("https://ikkunaedu.github.io/datavis_1/data/madurez2.csv", function(rows) {
+        d3.csv("https://ikkunaedu.github.io/datavis_1/data/madurez2.csv", function(rows) {  // Aqui está la magia funcional y la idea es que me hagan preguntas respecto a esto !! Si no me llegan preguntas yo les haré preguntas a Uds.
             // console.log("rows",rows);
-            myjson.children = rows.map( function(x,i) { return Object.values(x).reduce( function(acc,y,j) { return j < 1 ? { "name" : y, "children": [{"name":"letssee", "size":10 }] } : acc }, {} ) } ) 
-            // console.log(   myjson   )
-            console.log(JSON.stringify(myjson))
+            var functor = 
+                acc =>
+                    vals => { 
+                        var val = typeof vals == "object" ? Object.values(vals) : [ vals ]
+                        var cursor = val.length > 0 ? val.shift() : val;
+                        var finder = pool => property => element => pool.filter( obj => obj[property] == element ) 
+                        var found = finder(acc)("name")(cursor)
+                        var applied = 
+                            z => 
+                                l => { 
+                                    z["children"] = l.length > 1 ? z["children"] = functor(z["children"])( l ) :  z["children"].concat( [ { name: l[0], size: 1, children:[] } ]  )  ;
+                                    return z 
+                                }
+                        var update = pool => condition => pool.map( condition );
+                        return found.length > 0 ? update(acc)( x => x["name"] == cursor ? applied(x)(val) : x ) : acc.concat( [ { "name":cursor,children: [] } ] )
+                    } ;
+                    
+            var reducer = (input) => input.reduce( (acc,x,i) => functor(acc)(x) , [] )
+            myjson.children = reducer(rows);
+            console.log("myjson",myjson)
+            mycallback("", myjson);
         })
+
         var margin = {top: 350, right: 480, bottom: 350, left: 480},
             radius = Math.min(margin.top, margin.right, margin.bottom, margin.left) - 10;
         
@@ -111,7 +130,7 @@
         var root_ = null;
 
         var mycallback = function(error, root) {
-            if (error) return console.warn(error);
+            // if (error) return console.warn(error);
             // Compute the initial layout on the entire tree to sum sizes.
             // Also compute the full name and fill color for each node,
             // and stash the children so they can be restored as we descend.
@@ -252,9 +271,9 @@
             }
         }
 
-        // mycallback("", myjson);
+        
 
-        d3.json("https://ikkunaedu.github.io/datavis_1/data/newfile.json", function(error,root) { console.log("root",root); mycallback(error,root) });
+        // d3.json("https://ikkunaedu.github.io/datavis_1/data/plain.json", function(error,root) { console.log("root",root); mycallback(error,root) });
         
         function key(d) {
             var k = [], p = d;
