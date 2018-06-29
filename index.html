@@ -30,6 +30,7 @@
             "name": "main",
             "children": [ { "name":"hello", "size":10 }, { "name":"bye", "size": 5 }  ]
         };
+        const depth_level = 3;
         d3.csv("https://ikkunaedu.github.io/datavis_1/data/madurez2.csv", function(rows) {  // Aqui está la magia funcional y la idea es que me hagan preguntas respecto a esto !! Si no me llegan preguntas yo les haré preguntas a Uds.
             // console.log("rows",rows);
             var functor = 
@@ -42,11 +43,11 @@
                         var applied = 
                             z => 
                                 l => { 
-                                    z["children"] = l.length > 1 ? z["children"] = functor(z["children"])( l ) :  z["children"].concat( [ { name: l[0], size: 1, children:[] } ]  )  ;
+                                    z["children"] = l.length > 1 ? z["children"] = functor(z["children"])( l ) :  z["children"].concat( [ { name: l[0], size: 1, "description":l[0] ,children:[] } ]  )  ;
                                     return z 
                                 }
                         var update = pool => condition => pool.map( condition );
-                        return found.length > 0 ? update(acc)( x => x["name"] == cursor ? applied(x)(val) : x ) : acc.concat( [ { "name":cursor,children: [] } ] )
+                        return found.length > 0 ? update(acc)( x => x["name"] == cursor ? applied(x)(val) : x ) : acc.concat( [ { "name":cursor,"description":cursor,children: [] } ] )
                     } ;
                     
             var reducer = (input) => input.reduce( (acc,x,i) => functor(acc)(x) , [] )
@@ -126,7 +127,9 @@
                     .style("top", (d3.event.pageY-10)+"px")
                     .style("left", (d3.event.pageX+10)+"px");
         }
-        
+
+        var someColors = d3.scale.category20c();
+
         var root_ = null;
 
         var mycallback = function(error, root) {
@@ -142,12 +145,13 @@
                 d._children = d.children;
                 d.sum = d.value;
                 d.key = key(d);
-                d.fill = fill(d);
+                d.fill = someColors(parseInt( ( Math.cos(d.depth) + 1 )* (Math.sin( d.sum ) + 1) * 10 ));
+                console.log("d", ( parseInt( ( Math.cos(d.depth) + 1 )* (Math.sin( d.sum ) + 1) * 10 )   ) )
                 });
         
             // Now redefine the value function to use the previously-computed sum.
             partition
-                .children(function(d, depth) { return depth < 2 ? d._children : null; })
+                .children(function(d, depth) { return depth < depth_level ? d._children : null; })
                 .value(function(d) { return d.sum; });
         
             var center = svg.append("circle")
