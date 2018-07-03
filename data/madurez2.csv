@@ -1,10 +1,10 @@
 rol,seleccionar,size
-a_unico,b_ambos,0
-b_comparto,b_ambos,0
-b_comparto,b_ambos,0
-c_noresponsable,c_igual,0
-c_noresponsable,b_ambos,0
-b_comparto,c_igual,0
+a_unico,b_ambos,1
+b_comparto,b_ambos,1
+b_comparto,b_ambos,1
+c_noresponsable,c_igual,1
+c_noresponsable,b_ambos,1
+b_comparto,c_igual,1
 c_noresponsable,b_ambos,15
 b_comparto,c_igual,22
 b_comparto,c_igual,21
