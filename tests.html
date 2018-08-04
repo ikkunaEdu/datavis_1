@@ -30,9 +30,9 @@
             "name": "main",
             "children": [ { "name":"hello", "size":10 }, { "name":"bye", "size": 5 }  ]
         };
-        const depth_level = 2;
-        d3.csv("https://ikkunaedu.github.io/datavis_1/data/madurez2.csv", function(rows) {  // Aqui está la magia funcional y la idea es que me hagan preguntas respecto a esto !! Si no me llegan preguntas yo les haré preguntas a Uds.
-            // console.log("rows",rows);
+        const depth_level = 3;
+        d3.csv("https://ikkunaedu.github.io/datavis_1/data/madurez2.csv", function(rows) {
+            console.log("rows",rows);
             var functor = 
                 acc =>
                     vals => { 
@@ -44,10 +44,11 @@
                             z => 
                                 l => { 
                                     z["children"] = l.length > 1 ? z["children"] = functor(z["children"])( l ) :  z["children"].concat( [ { name: l[0], size: 1, "description":l[0] ,children:[] } ]  )  ;
+                                    console.log(acc)
                                     return z 
                                 }
                         var update = pool => condition => pool.map( condition );
-                        return found.length > 0 ? update(acc)( x => x["name"] == cursor ? applied(x)(val) : x ) : acc.concat( [ { "name":cursor,"description":cursor,children: [] } ] )
+                        return found.length > 0 ? update(acc)( x => x["name"] == cursor ? applied(x)(val) : x ) : acc.concat( applied( { "name":cursor,"description":cursor,children: [] })( val ) )
                     } ;
                     
             var reducer = (input) => input.reduce( (acc,x,i) => functor(acc)(x) , [] )
@@ -67,12 +68,14 @@
             .domain([0, 1e6])
             .clamp(true)
             .range([90, 20]);
+
+        const sum = (x,y) => x+y;
         
         var svg = d3.select("body").append("svg")
             .attr("width", margin.left + margin.right)
-            .attr("height", margin.top + margin.bottom)
+            .attr("height", margin.top + margin.bottom+220)
             .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .attr("transform", "translate(" + margin.left + "," + sum(margin.top,110) + ")");
         
         var partition = d3.layout.partition()
             .sort(function(a, b) { return d3.ascending(a.name, b.name); })
